@@ -1,5 +1,3 @@
-package client;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -41,9 +39,8 @@ public class Client {
 
     public static void main(String [] args) {
         try {
-
             String cmd = "command from console";
-//            Message msg = new Message(cmd);
+            Message msg = new Message(cmd);
             Client client = new Client();
             client.sendMessage(cmd);
         } catch (IOException e) {

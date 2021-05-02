@@ -1,17 +1,26 @@
 import java.io.*;
-import java.util.*;
 
 
 public class Message implements Serializable {
-    FileOutputStream fos = new FileOutputStream("temp.out");
-    ObjectOutputStream oos = new ObjectOutputStream(fos);
     String cmd = new String();
-    
 
+    public Message(String cmd) {
+        this.cmd = cmd;
 
+    }
 
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        String cmd = new String("testteeweqt");
+        serialize(cmd);
+    }
 
-
-    public Message() throws IOException {
+    static void serialize(String cmd) {
+        try (FileOutputStream fos = new FileOutputStream("savedMessage");
+             ObjectOutputStream oos = new ObjectOutputStream(fos);) {
+             oos.writeObject(cmd);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
+
