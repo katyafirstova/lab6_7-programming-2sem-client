@@ -7,6 +7,7 @@ import model.CommandCollection;
 import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.time.LocalDate;
@@ -39,8 +40,12 @@ public class CLICollection {
                 }
                 break;
 
-            case CLEAR:
             case INSERT:
+                addAndSaveHistory(command.getCommand());
+                sendMessage(new Message(command, createWorker()));
+                break;
+
+            case CLEAR:
             case SHOW:
             case INFO:
                 addAndSaveHistory(command.getCommand());

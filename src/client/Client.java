@@ -1,8 +1,6 @@
 package client;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
@@ -49,6 +47,7 @@ public class Client {
             client.bind(null);
             InetSocketAddress serverAddress = new InetSocketAddress(this.serverAddr, PORT);
             client.send(msg, serverAddress);
+            Message message = deserialize(msg);
             msg.clear();
             client.close();
         }
@@ -71,5 +70,16 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Message deserialize(ByteBuffer buffer) {
+        Message message = null;
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(buffer.array());
+             ObjectInputStream in = new ObjectInputStream(bis);) {
+            message = (Message) in.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            LOG.debug(e.getLocalizedMessage());
+        }
+        return message;
     }
 }
