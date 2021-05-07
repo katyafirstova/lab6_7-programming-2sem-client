@@ -9,10 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -34,7 +37,7 @@ public class CLICollection {
             case HELP:
                 addAndSaveHistory(command.getCommand());
                 for (CommandCollection s : CommandCollection.values()) {
-                    if (s != CommandCollection.UNKNOWN) {
+                    if (s != CommandCollection.UNKNOWN && s != CommandCollection.SAVE) {
                         System.out.println(s.getCommand() + ": " + s.getDescription());
                     }
                 }
@@ -46,7 +49,15 @@ public class CLICollection {
                 break;
 
             case CLEAR:
+                addAndSaveHistory(command.getCommand());
+                sendMessage(new Message(command));
+                break;
             case SHOW:
+                addAndSaveHistory(command.getCommand());
+                sendMessage(new Message(command));
+
+
+                break;
             case INFO:
                 addAndSaveHistory(command.getCommand());
                 sendMessage(new Message(command));
@@ -256,6 +267,30 @@ public class CLICollection {
         }
     }
 
+    public Message deserialize(ByteBuffer buffer) {
+        Message message = null;
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(buffer.array());
+             ObjectInputStream in = new ObjectInputStream(bis);) {
+            message = (Message) in.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            LOG.debug(e.getLocalizedMessage());
+        }
+        return message;
+    }
+
+    public Message receiveMessage() throws IOException {
+        Client client = new Client();
+        ByteBuffer buffer = client.receiveMessage();
+        return deserialize(buffer);
+    }
+
+    public void show(HashMap<Long, Worker> workers) {
+        System.out.println("___________");
+        for (Map.Entry<Long, Worker> entry : workers.entrySet()) {
+            System.out.format("key: %d, worker: %s\n", entry.getKey(), entry.getValue());
+        }
+        System.out.println("===========");
+    }
 }
 
 

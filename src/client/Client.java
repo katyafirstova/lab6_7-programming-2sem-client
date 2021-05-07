@@ -1,7 +1,7 @@
 package client;
 
 import java.io.*;
-import java.net.InetSocketAddress;
+import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 
@@ -53,25 +53,6 @@ public class Client {
         }
     }
 
-    public static void main(String [] args) {
-        Client client = new Client();
-        client.run();
-    }
-
-    public void run() {
-        CLICollection cliCollection = new CLICollection();
-        cliCollection.start();
-    }
-
-    public void serialize(Message message) {
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
-             ObjectOutputStream oos = new ObjectOutputStream(baos);) {
-            oos.writeObject(message);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public Message deserialize(ByteBuffer buffer) {
         Message message = null;
         try (ByteArrayInputStream bis = new ByteArrayInputStream(buffer.array());
@@ -81,5 +62,30 @@ public class Client {
             LOG.debug(e.getLocalizedMessage());
         }
         return message;
+    }
+
+    public static void main(String[] args) {
+        Client client = new Client();
+        client.run();
+    }
+
+    public void run() {
+        CLICollection cliCollection = new CLICollection();
+        cliCollection.start();
+    }
+
+
+    public ByteBuffer receiveMessage() throws IOException {
+        DatagramSocket clientSocket = new DatagramSocket(PORT);
+        ByteBuffer buffer = null;
+        DatagramPacket receivedData = new DatagramPacket(buffer.array(), buffer.array().length);
+        while (true) {
+            clientSocket.receive(receivedData);
+            String sentence = new String( receivedData.getData(), 0,
+                    receivedData.getLength() );
+            System.out.println("RECEIVED: " + sentence);
+
+        }
+
     }
 }
