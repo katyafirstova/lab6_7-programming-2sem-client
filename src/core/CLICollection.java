@@ -52,12 +52,13 @@ public class CLICollection {
                 addAndSaveHistory(command.getCommand());
                 sendMessage(new Message(command));
                 break;
+
             case SHOW:
                 addAndSaveHistory(command.getCommand());
+                waitAndShow();
                 sendMessage(new Message(command));
-
-
                 break;
+
             case INFO:
                 addAndSaveHistory(command.getCommand());
                 sendMessage(new Message(command));
@@ -111,6 +112,24 @@ public class CLICollection {
                 break;
 
         }
+    }
+
+    private void waitAndShow() {
+        Runnable receiver = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Message message = receiveMessage();
+                    if (message != null) {
+                        show(message.getWorkers());
+                    }
+                } catch (IOException e) {
+                    LOG.debug(e.getLocalizedMessage());
+                }
+            }
+        };
+        Thread thread = new Thread(receiver);
+        thread.start();
     }
 
     /**
@@ -281,7 +300,7 @@ public class CLICollection {
     public Message receiveMessage() throws IOException {
         Client client = new Client();
         ByteBuffer buffer = client.receiveMessage();
-        return deserialize(buffer);
+        return buffer == null ? null : deserialize(buffer);
     }
 
     public void show(HashMap<Long, Worker> workers) {

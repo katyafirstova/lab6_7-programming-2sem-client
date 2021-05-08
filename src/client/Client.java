@@ -15,6 +15,7 @@ public class Client {
 
     static final Logger LOG = LoggerFactory.getLogger(Client.class);
     static final int PORT = 9023;
+    static final int PORT_2 = 43245;
     static final String LOCALHOST = "localhost";
     private String serverAddr;
 
@@ -76,16 +77,21 @@ public class Client {
 
 
     public ByteBuffer receiveMessage() throws IOException {
-        DatagramSocket clientSocket = new DatagramSocket(PORT);
         ByteBuffer buffer = null;
-        DatagramPacket receivedData = new DatagramPacket(buffer.array(), buffer.array().length);
-        while (true) {
-            clientSocket.receive(receivedData);
-            String sentence = new String( receivedData.getData(), 0,
-                    receivedData.getLength() );
-            System.out.println("RECEIVED: " + sentence);
-
+        try {
+            DatagramChannel client = DatagramChannel.open();
+//            client.configureBlocking(false);
+            client.bind(null);
+            InetSocketAddress receiver = new InetSocketAddress(this.serverAddr, PORT);
+            client.connect(receiver);
+            buffer = ByteBuffer.allocate(10240);
+            client.receive(buffer);
+            buffer.flip();
+            client.close();
+        } catch (IOException e) {
+            LOG.info(e.getLocalizedMessage());
         }
-
+        return buffer;
     }
+
 }
