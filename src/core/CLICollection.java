@@ -12,10 +12,7 @@ import java.io.*;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -61,6 +58,7 @@ public class CLICollection {
 
             case INFO:
                 addAndSaveHistory(command.getCommand());
+                waitAndInfo();
                 sendMessage(new Message(command));
                 break;
 
@@ -88,8 +86,13 @@ public class CLICollection {
                 break;
 
             case REMOVE_ALL_BY_END_DATE:
+                addAndSaveHistory(command.getCommand());
+                sendMessage(new Message(command, getEndDate()));
+                break;
+
             case PRINT_FIELD_DESCENDING_END_DATE:
                 addAndSaveHistory(command.getCommand());
+                waitAndPrint();
                 sendMessage(new Message(command, getEndDate()));
                 break;
 
@@ -112,6 +115,59 @@ public class CLICollection {
                 break;
 
         }
+    }
+
+    private void waitAndPrint() {
+        Runnable receiver = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Message message = receiveMessage();
+                    if (message != null) {
+                        ArrayList<Date> dates = new ArrayList<Date>();
+                        for (Worker worker : message.getWorkers().values()) {
+                            dates.add(worker.getEndDate());
+                        }
+                        Collections.sort(dates, new Comparator<Date>() {
+                            @Override
+                            public int compare(Date date, Date t1) {
+                                return (int) (t1.getTime() - date.getTime());
+                            }
+                        });
+                        for (Date date : dates) {
+                            System.out.println(date);
+                        }
+                    }
+                } catch (IOException e) {
+                    LOG.debug(e.getLocalizedMessage());
+                }
+            }
+        };
+        Thread thread = new Thread(receiver);
+        thread.start();
+
+    }
+
+    private void waitAndInfo() {
+        Runnable receiver = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Message message = receiveMessage();
+                    if (message != null) {
+                        System.out.println("Worker Collection properties");
+                        System.out.format("Initialisation data: %s\n", message.getInitData());
+                        System.out.format("Count of elements: %d\n", message.getWorkers().size());
+                        System.out.format("Type of collection: %s\n", message.getWorkers().getClass());
+                    }
+                } catch (IOException e) {
+                    LOG.debug(e.getLocalizedMessage());
+                }
+            }
+        };
+        Thread thread = new Thread(receiver);
+        thread.start();
+
     }
 
     private void waitAndShow() {

@@ -54,8 +54,9 @@ public class Client {
         server.configureBlocking(true);
         InetSocketAddress iAdd = new InetSocketAddress(this.serverAddr, PORT_CLIENT);
         server.bind(iAdd);
-        ByteBuffer in = ByteBuffer.allocate(8192);
+        ByteBuffer in = ByteBuffer.allocate(81920);
         server.receive(in);
+        server.close();
         return in;
     }
 
