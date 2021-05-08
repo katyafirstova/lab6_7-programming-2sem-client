@@ -49,7 +49,7 @@ public class WorkerAsker {
             System.out.format("Значение не распознано: %s\n", e.getMessage() == null ? "" : e.getMessage());
             return askX();
         }
-        return x;
+        return (float) x;
 
     }
 
@@ -270,4 +270,3 @@ public class WorkerAsker {
         return name;
     }
 }
-
