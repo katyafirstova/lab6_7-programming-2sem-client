@@ -59,5 +59,4 @@ public class Client {
         server.close();
         return in;
     }
-
 }

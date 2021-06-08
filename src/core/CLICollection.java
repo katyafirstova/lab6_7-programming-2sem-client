@@ -96,7 +96,6 @@ public class CLICollection {
                 sendMessage(new Message(command, getEndDate()));
                 break;
 
-
             case EXIT:
                 addAndSaveHistory(command.getCommand());
                 System.exit(0);
@@ -216,7 +215,7 @@ public class CLICollection {
     }
 
     /**
-     * {@code showHistory} Вывод истории использованных команд
+     * {@code showHistory}
      */
     private void showHistory() {
         for (int i = 0; i < history.size(); i++) {
@@ -229,7 +228,7 @@ public class CLICollection {
     }
 
     /**
-     * {@code addAndSaveHistory} Сохранение истории команд в файл в формате xml
+     * {@code addAndSaveHistory} add command to history and save to xml
      */
     private void addAndSaveHistory(String command) {
         history.add(command);
@@ -265,14 +264,13 @@ public class CLICollection {
     }
 
     private long getId() {
-
         WorkerAsker workerAsker = new WorkerAsker();
         return workerAsker.askId();
     }
 
 
     /**
-     * {@code сreateWorker} Создание элемента коллекции
+     * {@code сreateWorker}
      */
     private Worker createWorker() {
 
@@ -311,7 +309,7 @@ public class CLICollection {
     }
 
     /**
-     * {@code start} Считывание и анализ вводимой пользователем строки
+     * {@code start} read and analyse command line
      */
     public void start() {
 

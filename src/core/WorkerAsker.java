@@ -12,7 +12,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /**
- * {code WorkerAsker} Заправшивание у пользователя данных для работы с коллекцией
+ * {code WorkerAsker}
  */
 public class WorkerAsker {
 
@@ -44,7 +44,7 @@ public class WorkerAsker {
             System.out.println("Введите координату X:");
             x = scanner.nextFloat();
             System.out.format("Вы ввели значение: %s\n", x);
-            if(x == 0) throw new IllegalArgumentException("Поле не может быть пустым!");
+            if (x == 0) throw new IllegalArgumentException("Поле не может быть пустым!");
         } catch (Exception e) {
             System.out.format("Значение не распознано: %s\n", e.getMessage() == null ? "" : e.getMessage());
             return askX();
@@ -81,7 +81,7 @@ public class WorkerAsker {
             System.out.println("Введите значение роста:");
             height = scanner.nextFloat();
             System.out.format("Вы ввели значение: %s\n", height);
-            if (height < 0 ) throw new IllegalArgumentException("Значение поля не может быть " +
+            if (height < 0) throw new IllegalArgumentException("Значение поля не может быть " +
                     "меньше нуля или равно нулю!");
             if (height == 0) throw new IllegalArgumentException("Значение поля не должно быть равным нулю!");
         } catch (Exception e) {
@@ -98,7 +98,6 @@ public class WorkerAsker {
         Scanner scanner = new Scanner(System.in).useDelimiter("\n");
 
         try {
-
             System.out.println("Введите значение веса:");
             weight = scanner.nextInt();
             System.out.format("Вы ввели значение: %s\n", weight);
@@ -178,7 +177,7 @@ public class WorkerAsker {
 
             newStartDate = LocalDate.parse(startDate);
             System.out.println("Введена дата : " + newStartDate);
-            if(newStartDate == null) throw new IllegalArgumentException();
+            if (newStartDate == null) throw new IllegalArgumentException();
 
         } catch (Exception e) {
             System.out.println("Некорректный формат ввода");
@@ -247,7 +246,7 @@ public class WorkerAsker {
             name = scanner.nextLine();
             System.out.format("Вы ввели значение: %s\n", name);
             if (!name.contains(".xml")) throw new IllegalArgumentException("Имя файла должно содержать расшиение .xml");
-            if(name.length() < 5) throw new IllegalArgumentException("Введите полное имя файла:");
+            if (name.length() < 5) throw new IllegalArgumentException("Введите полное имя файла:");
         } catch (Exception e) {
             System.out.format("Значение поля не распознано: %s\n", e.getMessage() == null ? "" : e.getMessage());
             return null;
@@ -268,5 +267,9 @@ public class WorkerAsker {
             return null;
         }
         return name;
+    }
+
+    public String askUserName() {
+
     }
 }
