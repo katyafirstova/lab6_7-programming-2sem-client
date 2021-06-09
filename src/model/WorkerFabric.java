@@ -9,11 +9,10 @@ import java.util.Date;
 public class WorkerFabric {
     public static Worker create(String name, float x, Integer y, Integer salary,
                                 LocalDate startDate, Date endDate, Status status, float height, Integer weight,
-                                Color hairColor, String userName, String userPassword) {
+                                Color hairColor) {
         Coordinates coordinates = new Coordinates(x, y);
         Person person = new Person(height, weight, hairColor);
-        User user = new User(userName, userPassword);
-        Worker worker = new Worker(name, coordinates, salary, startDate, endDate, status, person, user);
+        Worker worker = new Worker(name, coordinates, salary, startDate, endDate, status, person);
         return worker;
     }
 }

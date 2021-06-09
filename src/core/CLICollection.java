@@ -23,6 +23,7 @@ public class CLICollection {
 
     private ArrayList<String> history = new ArrayList<String>();
     static final Logger LOG = LoggerFactory.getLogger(Client.class);
+    User user = null;
 
 
     public void analyse(String cmd) {
@@ -290,6 +291,17 @@ public class CLICollection {
 
         return worker;
     }
+
+    private User createUser() {
+        WorkerAsker workerAsker = new WorkerAsker();
+        String userName = workerAsker.askUserName();
+        String password = workerAsker.askUserPassword();
+        User user = User.createUser(userName, password);
+        System.out.println("Пользователь прошел регистрацию");
+
+        return user;
+    }
+
 
     /**
      * {@code createFilename} создание имя файла

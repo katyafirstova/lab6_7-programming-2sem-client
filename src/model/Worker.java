@@ -42,6 +42,11 @@ public class Worker implements Serializable {
 
     }
 
+    public Worker(String name, Coordinates coordinates, Integer salary, LocalDate startDate,
+                  Date endDate, Status status, Person person) {
+    }
+
+
     @Override
     public String toString() {
         return "Worker{" +
