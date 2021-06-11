@@ -296,7 +296,8 @@ public class CLICollection {
         int salary = workerAsker.askSalary();
         LocalDate newStartDate = workerAsker.askStartDate();
         Date newEndDate = workerAsker.askEndDate();
-        Worker worker = WorkerFabric.create(name, x, y, salary, newStartDate, newEndDate, status, height, weight, color);
+        Worker worker = WorkerFabric.create(name, x, y, salary, newStartDate, newEndDate, status, height, weight, color,
+                                            this.user);
         System.out.format("Создан элемент коллекции: %s\n", worker);
 
         return worker;
