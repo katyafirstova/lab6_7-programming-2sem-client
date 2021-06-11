@@ -43,9 +43,12 @@ public class Hasher {
     }
 
     public byte[] getSalt() throws NoSuchAlgorithmException {
-        SecureRandom random = new SecureRandom();
-        byte[] salt = new byte[16];
-        random.nextBytes(salt);
-        return salt;
+        return "123456789".getBytes(StandardCharsets.UTF_8);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(Hasher.getHash("123456"));
+        System.out.println(Hasher.getHash("123456"));
+        System.out.println(Hasher.getHash("123456"));
     }
 }

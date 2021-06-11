@@ -25,27 +25,17 @@ public class UserAsker {
     }
 
     public String askUserPassword() {
-        Console cnsl = System.console();
-        System.out.println("Введите пароль:");
-        char[] pwd = cnsl.readPassword(": ");
-        System.out.println("Password is: " + pwd);
-//        Console cons;
-//        String password;
-//        if ((cons = System.console()) != null &&
-//                (password = cons.readPassword("%s", "Password:")) != null) {
-//            java.util.Arrays.fill(password, ' ');
-//        }
+        String userPassword = new String();
+        Scanner scanner = new Scanner(System.in).useDelimiter("\n");
+        try {
+            System.out.println("Введите пароль:");
+            userPassword = scanner.nextLine();
+        } catch (Exception e) {
+            System.out.format("Значение не распознано: %s\n", e.getMessage() == null ? "" : e.getMessage());
+            return null;
+        }
+        return userPassword;
 
-
-//        try {
-//            System.out.println("Введите пароль:");
-//            password = scanner.nextLine();
-//        } catch (Exception e) {
-//            System.out.format("Значение не распознано: %s\n", e.getMessage() == null ? "" : e.getMessage());
-//            return null;
-//        }
-//        return password;
-        return pwd.toString();
     }
 
     public User getUser() {

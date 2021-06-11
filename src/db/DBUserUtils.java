@@ -23,6 +23,7 @@ public class DBUserUtils extends DBConnection {
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, userName);
             preparedStatement.setString(2, userPassword);
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             LOG.debug(e.getMessage());
             return false;
@@ -56,7 +57,7 @@ public class DBUserUtils extends DBConnection {
             preparedStatement.setString(2, userPassword);
             ResultSet rs = preparedStatement.executeQuery();
             rs.next();
-            Integer id = rs.getInt("id");
+            Long id = rs.getLong("id");
             if(id != null) {
                 user = new User(userName, userPassword);
                 user.setUserId(id);
