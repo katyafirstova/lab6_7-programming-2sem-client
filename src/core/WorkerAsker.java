@@ -269,36 +269,4 @@ public class WorkerAsker {
         return name;
     }
 
-    public String askUserName() {
-        String userName = new String();
-        Scanner scanner = new Scanner(System.in).useDelimiter("\n");
-
-        try {
-            System.out.println("Введите имя пользователя:");
-            userName = scanner.nextLine();
-            System.out.format("Вы ввели значение: %s\n", userName);
-        } catch (Exception e) {
-            System.out.format("Значение поля не распознано: %s\n", e.getMessage() == null ? "" : e.getMessage());
-            return null;
-        }
-        return userName;
-    }
-
-    public String askUserPassword() {
-        String password = new String();
-        Scanner scanner = new Scanner(System.in).useDelimiter("\n");
-
-        try {
-            System.out.println("Введите пароль:");
-            password = scanner.nextLine();
-            System.out.format("Вы ввели значение: %s\n", password);
-        } catch (Exception e) {
-            System.out.format("Значение поля не распознано: %s\n", e.getMessage() == null ? "" : e.getMessage());
-            return null;
-        }
-        return password;
-    }
-
-
-
 }

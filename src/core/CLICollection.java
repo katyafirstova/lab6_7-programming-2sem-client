@@ -3,6 +3,7 @@ package core;
 import client.Client;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
+import db.DBUserUtils;
 import model.CommandCollection;
 import model.*;
 import org.slf4j.Logger;
@@ -11,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
+import java.security.NoSuchAlgorithmException;
+import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -22,13 +25,19 @@ import java.util.*;
 public class CLICollection {
 
     private ArrayList<String> history = new ArrayList<String>();
-    static final Logger LOG = LoggerFactory.getLogger(Client.class);
+    static final Logger LOG = LoggerFactory.getLogger(CLICollection.class);
     User user = null;
 
 
     public void analyse(String cmd) {
 
         CommandCollection command = CommandCollection.fromCmd(cmd == null ? "" : cmd.trim());
+
+        if (user == null && !authorize()) {
+            System.out.println("Пользователь с таким логином и паролем не найден");
+            registration();
+            return;
+        }
 
         switch (command) {
 
@@ -116,6 +125,7 @@ public class CLICollection {
 
         }
     }
+
 
     private void waitAndPrint() {
         Runnable receiver = new Runnable() {
@@ -293,9 +303,9 @@ public class CLICollection {
     }
 
     private User createUser() {
-        WorkerAsker workerAsker = new WorkerAsker();
-        String userName = workerAsker.askUserName();
-        String password = workerAsker.askUserPassword();
+        UserAsker userAsker = new UserAsker();
+        String userName = userAsker.askUserName();
+        String password = userAsker.askUserPassword();
         User user = User.createUser(userName, password);
         System.out.println("Пользователь прошел регистрацию");
 
@@ -376,6 +386,25 @@ public class CLICollection {
         }
         System.out.println("===========");
     }
+
+    public boolean authorize() {
+        System.out.println("Требуется авторизация");
+        UserAsker userAsker = new UserAsker();
+        User tempUser = userAsker.getUser();
+        DBUserUtils dbUserUtils = new DBUserUtils();
+        this.user = dbUserUtils.getUser(tempUser.getUserName(), tempUser.getUserPassword());
+        return this.user != null;
+    }
+
+    private void registration() {
+        System.out.println("Регистрация пользователя");
+        UserAsker userAsker = new UserAsker();
+        User tempUser = userAsker.getUser();
+        DBUserUtils dbUserUtils = new DBUserUtils();
+        dbUserUtils.insertUser(tempUser.getUserName(), tempUser.getUserPassword());
+
+    }
+
 }
 
 

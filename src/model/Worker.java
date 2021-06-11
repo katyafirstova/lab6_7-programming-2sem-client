@@ -1,6 +1,5 @@
 package model;
 
-import db.UserUtils;
 
 import java.io.Serializable;
 import java.time.LocalDate;

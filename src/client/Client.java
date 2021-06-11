@@ -6,12 +6,13 @@ import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 
 import core.CLICollection;
-import model.Message;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 public class Client {
+
 
     static final Logger LOG = LoggerFactory.getLogger(Client.class);
     static final int PORT_SERVER = 9023;
