@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 public class Message implements Serializable {
@@ -17,28 +18,35 @@ public class Message implements Serializable {
     Date date;
     LocalDate startDate;
     Long key;
-    HashMap<Long, Worker> workers;
+    ConcurrentHashMap<Long, Worker> workers;
     LocalDateTime initData;
-
-    public Message(CommandCollection collection, HashMap<Long, Worker> workers) {
-        this.collection = collection;
-        this.workers = workers;
-    }
-
-    public Message(CommandCollection collection, LocalDateTime initData, HashMap<Long, Worker> workers) {
-        this.collection = collection;
-        this.initData = initData;
-        this.workers = workers;
-    }
-
-    public Message(CommandCollection collection, Long key) {
-        this.collection = collection;
-        this.key = key;
-    }
-
 
     public Message(CommandCollection collection) {
         this.collection = collection;
+    }
+
+    public Message(CommandCollection collection, ConcurrentHashMap<Long, Worker> workers) {
+        this.collection = collection;
+        this.workers = workers;
+    }
+
+    public Message(CommandCollection collection, LocalDateTime initData, ConcurrentHashMap<Long, Worker> workers) {
+        this.collection = collection;
+        this.initData = initData;
+        this.workers = workers;
+
+    }
+
+    public Message(CommandCollection collection, Long key, User user) {
+        this.collection = collection;
+        this.key = key;
+        this.worker = new Worker(user);
+    }
+
+
+    public Message(CommandCollection collection, User user) {
+        this.collection = collection;
+        this.worker = new Worker(user);
     }
 
     public Message(CommandCollection collection, Worker worker) {
@@ -46,20 +54,24 @@ public class Message implements Serializable {
         this.worker = worker;
     }
 
-    public Message(CommandCollection collection, int salary) {
+    public Message(CommandCollection collection, int salary, User user) {
         this.collection = collection;
         this.salary = salary;
+        this.worker = new Worker(user);
     }
 
-    public Message(CommandCollection collection, Date date) {
+    public Message(CommandCollection collection, Date date, User user) {
         this.collection = collection;
         this.date = date;
+        this.worker = new Worker(user);
     }
 
-    public Message(CommandCollection collection, LocalDate startDate) {
+    public Message(CommandCollection collection, LocalDate startDate, User user) {
         this.collection = collection;
         this.startDate = startDate;
+        this.worker = new Worker(user);
     }
+
 
     public CommandCollection getCollection() {
         return collection;
@@ -86,7 +98,7 @@ public class Message implements Serializable {
         return key;
     }
 
-    public HashMap<Long, Worker> getWorkers() {
+    public ConcurrentHashMap<Long, Worker> getWorkers() {
         return workers;
     }
 

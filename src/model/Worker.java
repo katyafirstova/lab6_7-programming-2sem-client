@@ -20,6 +20,9 @@ public class Worker implements Serializable {
     private Person person;
     private User user;
 
+    public Worker(User user) {
+        this.user = user;
+    }
 
     public Worker(String name, Coordinates coordinates, Integer salary,
                   LocalDate startDate, Date endDate, Status status, Person person, User user) {
@@ -43,7 +46,6 @@ public class Worker implements Serializable {
 
     public Worker(String name, Coordinates coordinates, Integer salary, LocalDate startDate,
                   Date endDate, Status status, Person person) {
-
     }
 
 

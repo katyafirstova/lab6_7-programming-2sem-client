@@ -16,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -57,7 +58,7 @@ public class CLICollection {
 
             case CLEAR:
                 addAndSaveHistory(command.getCommand());
-                sendMessage(new Message(command));
+                sendMessage(new Message(command, this.user));
                 break;
 
             case SHOW:
@@ -82,28 +83,28 @@ public class CLICollection {
             case REMOVE_LOWER:
             case REMOVE_GREATER:
                 addAndSaveHistory(command.getCommand());
-                sendMessage(new Message(command, getRemoveSalary()));
+                sendMessage(new Message(command, getRemoveSalary(), this.user));
                 break;
 
             case REMOVE_KEY:
                 addAndSaveHistory(command.getCommand());
-                sendMessage(new Message(command, getRemoveKey()));
+                sendMessage(new Message(command, getRemoveKey(), this.user));
                 break;
 
             case REMOVE_ALL_BY_START_DATE:
                 addAndSaveHistory(command.getCommand());
-                sendMessage(new Message(command, getStartDate()));
+                sendMessage(new Message(command, getStartDate(), this.user));
                 break;
 
             case REMOVE_ALL_BY_END_DATE:
                 addAndSaveHistory(command.getCommand());
-                sendMessage(new Message(command, getEndDate()));
+                sendMessage(new Message(command, getEndDate(), this.user));
                 break;
 
             case PRINT_FIELD_DESCENDING_END_DATE:
                 addAndSaveHistory(command.getCommand());
                 waitAndPrint();
-                sendMessage(new Message(command, getEndDate()));
+                sendMessage(new Message(command, getEndDate(), this.user));
                 break;
 
             case EXIT:
@@ -380,7 +381,7 @@ public class CLICollection {
         return buffer == null ? null : deserialize(buffer);
     }
 
-    public void show(HashMap<Long, Worker> workers) {
+    public void show(ConcurrentHashMap<Long, Worker> workers) {
         System.out.println("___________");
         for (Map.Entry<Long, Worker> entry : workers.entrySet()) {
             System.out.format("key: %d, worker: %s\n", entry.getKey(), entry.getValue());

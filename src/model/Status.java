@@ -1,6 +1,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 public enum Status implements Serializable {
     FIRED("fired"),
@@ -25,6 +26,9 @@ public enum Status implements Serializable {
 
     }
     public static Status fromStr(String cmd) {
+//        if(cmd != null) {
+////            cmd = cmd.toLowerCase();
+//        }
         for (Status s : Status.values()) {
             if (cmd != null && cmd.equals(s.name())) {
                 return s;
