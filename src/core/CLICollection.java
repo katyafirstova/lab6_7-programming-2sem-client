@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class CLICollection {
 
-    private ArrayList<String> history = new ArrayList<String>();
+    private ArrayList<String> history = new ArrayList<>();
     static final Logger LOG = LoggerFactory.getLogger(CLICollection.class);
     User user = null;
 
@@ -53,7 +53,7 @@ public class CLICollection {
 
             case INSERT:
                 addAndSaveHistory(command.getCommand());
-                sendMessage(new Message(command, createWorker()));
+                sendMessage(new Message(command, createWorker(false)));
                 break;
 
             case CLEAR:
@@ -73,11 +73,10 @@ public class CLICollection {
                 sendMessage(new Message(command));
                 break;
 
-//            case UPDATE_ID:
-////                collection.update(getId());
-//                addAndSaveHistory(command.getCommand());
-//                sendMessage(new Message(command, ));
-//                break;
+            case UPDATE_ID:
+                addAndSaveHistory(command.getCommand());
+                sendMessage(new Message(command, createWorker(true)));
+                break;
 
 
             case REMOVE_LOWER:
@@ -135,11 +134,11 @@ public class CLICollection {
                 try {
                     Message message = receiveMessage();
                     if (message != null) {
-                        ArrayList<Date> dates = new ArrayList<Date>();
+                        ArrayList<Date> dates = new ArrayList<>();
                         for (Worker worker : message.getWorkers().values()) {
                             dates.add(worker.getEndDate());
                         }
-                        Collections.sort(dates, new Comparator<Date>() {
+                        dates.sort(new Comparator<Date>() {
                             @Override
                             public int compare(Date date, Date t1) {
                                 return (int) (t1.getTime() - date.getTime());
@@ -210,7 +209,7 @@ public class CLICollection {
             String filename = workerAsker.askNameOfFile();
             if (filename != null) {
                 BufferedReader reader = new BufferedReader(new FileReader(filename));
-                ArrayList<String> script = new ArrayList<String>();
+                ArrayList<String> script = new ArrayList<>();
                 String line;
                 while ((line = reader.readLine()) != null) {
                     script.add(line);
@@ -230,11 +229,9 @@ public class CLICollection {
      * {@code showHistory}
      */
     private void showHistory() {
-        for (int i = 0; i < history.size(); i++) {
-            String hist = history.get(i);
-            if (!hist.equals(CommandCollection.UNKNOWN)) {
+        for (String hist : history) {
+            if (!hist.equals(CommandCollection.UNKNOWN.getCommand())) {
                 System.out.println(hist);
-
             }
         }
     }
@@ -284,9 +281,12 @@ public class CLICollection {
     /**
      * {@code сreateWorker}
      */
-    private Worker createWorker() {
-
+    private Worker createWorker(boolean updateId) {
+        long id = -1;
         WorkerAsker workerAsker = new WorkerAsker();
+        if (updateId) {
+            id = workerAsker.askId();
+        }
         String name = workerAsker.askName();
         float x = workerAsker.askX();
         int y = workerAsker.askY();
@@ -299,7 +299,12 @@ public class CLICollection {
         Date newEndDate = workerAsker.askEndDate();
         Worker worker = WorkerFabric.create(name, x, y, salary, newStartDate, newEndDate, status, height, weight, color,
                                             this.user);
-        System.out.format("Создан элемент коллекции: %s\n", worker);
+        if (updateId)  {
+            worker.setId(id);
+            System.out.format("Обновлен элемент коллекции: %s\n", worker);
+        } else {
+            System.out.format("Создан элемент коллекции: %s\n", worker);
+        }
 
         return worker;
     }
@@ -352,7 +357,7 @@ public class CLICollection {
 
     public void sendMessage(Message message) {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
-             ObjectOutputStream oos = new ObjectOutputStream(baos);) {
+             ObjectOutputStream oos = new ObjectOutputStream(baos)) {
             oos.writeObject(message);
             Client client = new Client();
             ByteBuffer buffer = ByteBuffer.wrap(baos.toByteArray());
@@ -367,7 +372,7 @@ public class CLICollection {
     public Message deserialize(ByteBuffer buffer) {
         Message message = null;
         try (ByteArrayInputStream bis = new ByteArrayInputStream(buffer.array());
-             ObjectInputStream in = new ObjectInputStream(bis);) {
+             ObjectInputStream in = new ObjectInputStream(bis)) {
             message = (Message) in.readObject();
         } catch (IOException | ClassNotFoundException e) {
             LOG.debug(e.getLocalizedMessage());
