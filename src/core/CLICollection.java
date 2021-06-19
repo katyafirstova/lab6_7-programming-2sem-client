@@ -35,7 +35,9 @@ public class CLICollection {
         CommandCollection command = CommandCollection.fromCmd(cmd == null ? "" : cmd.trim());
 
         if (user == null && !authorize()) {
-            System.out.println("Пользователь с таким логином и паролем не найден");
+            System.out.println("Пользователь с таким логином и паролем не найден: регистрация Enter, выход Ctrl+c ");
+            Scanner scanner = new Scanner(System.in).useDelimiter("\n");
+            scanner.nextLine();
             registration();
             return;
         }
@@ -409,7 +411,7 @@ public class CLICollection {
         User tempUser = userAsker.getUser();
         DBUserUtils dbUserUtils = new DBUserUtils();
         dbUserUtils.insertUser(tempUser.getUserName(), tempUser.getUserPassword());
-
+        this.user = dbUserUtils.getUser(tempUser.getUserName(), tempUser.getUserPassword());
     }
 
 }

@@ -39,8 +39,20 @@ public class UserAsker {
     }
 
     public User getUser() {
-        String userName = askUserName();
-        String userPassword = askUserPassword();
+        String userName = null;
+        String userPassword = null;
+        while( userName == null || userName.length() == 0) {
+            userName = askUserName();
+            if (userName == null || userName.length() == 0) {
+                System.out.println("Имя не может быть пустым");
+            }
+        }
+        while( userPassword == null || userPassword.length() == 0) {
+            userPassword = askUserPassword();
+            if (userPassword == null || userPassword.length() == 0) {
+                System.out.println("Пароль не может быть пустым");
+            }
+        }
         return new User(userName, Hasher.getHash(userPassword));
     }
 }
